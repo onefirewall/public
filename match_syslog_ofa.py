@@ -8,7 +8,7 @@ es = Elasticsearch(['http://localhost:9200/'])
 
 def get_data_syslog():
     time_now = datetime.now()
-    time_early = datetime.fromtimestamp(int(time.time()) - (1.2*3600))
+    time_early = datetime.fromtimestamp(int(time.time()) - (1.1*3600))
     time_now_str = time_now.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
     time_early_str = time_early.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
 
@@ -37,7 +37,11 @@ def get_data_syslog():
 def update_from_ofa(syslog_array):
     arr = []
     for syslog_events in syslog_array:
-        arr.append(syslog_events['_source']['ip_source'])
+        try:
+            arr.append(syslog_events['_source']['srcip'])
+            arr.append(syslog_events['_source']['dstip'])
+        except:
+            pass
         syslog_events['_source']['ofa_exist'] = False
     
     res = es.search(index="ofa-ips", 
@@ -54,10 +58,15 @@ def update_from_ofa(syslog_array):
     for f in res['hits']['hits']:
         print(f['_source']['src_ip'])
         for syslog_events in syslog_array:
-            if f['_source']['src_ip'] == syslog_events['_source']['ip_source']:
+            if f['_source']['src_ip'] == syslog_events['_source']['srcip']:
                 syslog_events['_source']['ofa_exist'] = True
                 syslog_events['_source']['ofa'] = f['_source']
-                print("OK")
+                syslog_events['_source']['ofa_attack_direcation'] = 'in'
+            elif f['_source']['src_ip'] == syslog_events['_source']['dstip']:
+                syslog_events['_source']['ofa_exist'] = True
+                syslog_events['_source']['ofa'] = f['_source']
+                syslog_events['_source']['ofa_attack_direcation'] = 'out'
+
     return syslog_array
 
 def update_syslog(syslog_array):
