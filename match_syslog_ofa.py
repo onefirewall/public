@@ -8,7 +8,7 @@ es = Elasticsearch(['http://localhost:9200/'])
 
 def get_data_syslog():
     time_now = datetime.now()
-    time_early = datetime.fromtimestamp(int(time.time()) - (10*60))
+    time_early = datetime.fromtimestamp(int(time.time()) - (30*60))
     time_now_str = time_now.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
     time_early_str = time_early.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
 
