@@ -1,11 +1,27 @@
 from datetime import datetime
 import time
 import json
-from elasticsearch import Elasticsearch
-from elasticsearch import helpers
 import requests
 
 max_mb = 15000
+
+
+def clean_not_ofa():
+    url = 'http://localhost:9200/ofa-syslog*/_delete_by_query'
+    myobj = {
+                "query": {
+                    "bool": {
+                        "must_not": {
+                            "exists": {
+                                "field": "ofa_exist"
+                            }
+                        }
+                    }
+                }
+            }
+    x = requests.post(url, data = myobj)
+    print(x.text)
+
 
 def delete_index(index_name):
     url = "http://localhost:9200/" + index_name
@@ -30,7 +46,6 @@ def needs_clean():
     else:
         return None
 
-
 def rec_clean():
     array_index = needs_clean()
     if array_index is not None:
@@ -41,4 +56,6 @@ def rec_clean():
     else:
         print("Nothing to clean")
 
+
+clean_not_ofa()
 rec_clean()
