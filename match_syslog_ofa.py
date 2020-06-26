@@ -38,8 +38,11 @@ def update_from_ofa(syslog_array):
     arr = []
     for syslog_events in syslog_array:
         try:
-            arr.append(syslog_events['_source']['srcip'])
-            arr.append(syslog_events['_source']['dstip'])
+            if syslog_events['_source']['srcip'].startswith("185.86.84")==False:
+                arr.append(syslog_events['_source']['srcip'])
+
+            if syslog_events['_source']['dstip'].startswith("185.86.84")==False:
+                arr.append(syslog_events['_source']['dstip'])
         except:
             pass
         syslog_events['_source']['ofa_exist'] = False
@@ -56,7 +59,7 @@ def update_from_ofa(syslog_array):
                     )
     
     for f in res['hits']['hits']:
-        print(f['_source']['src_ip'])
+
         for syslog_events in syslog_array:
             if f['_source']['src_ip'] == syslog_events['_source']['srcip']:
                 syslog_events['_source']['ofa_exist'] = True

@@ -4,11 +4,8 @@ import json
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 import requests
-# 50k max
 
-max_mb = 1
-
-es = Elasticsearch(['http://localhost:9200/'])
+max_mb = 15000
 
 def delete_index(index_name):
     url = "https://localhost:9202/" + index_name
@@ -39,9 +36,9 @@ def rec_clean():
     if array_index is not None:
         print("Need to clean")
         delete_index(array_index[0])
+        time.sleep(5)
         rec_clean()
     else:
-        pass
+        print("Nothing to clean")
 
 rec_clean()
-print("End")
