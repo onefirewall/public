@@ -20,10 +20,11 @@ def clean_not_ofa():
                 }
             }
     y = json.dumps(myobj)
-
-    x = requests.post(url, data = y, headers = {'Content-type': 'application/json'})
-    print(x.text)
-
+    try:
+        x = requests.post(url, data = y, headers = {'Content-type': 'application/json'})
+        print(x.text)
+    except:
+        pass
 
 def delete_index(index_name):
     url = "http://localhost:9200/" + index_name
