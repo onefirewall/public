@@ -8,7 +8,7 @@ import requests
 max_mb = 15000
 
 def delete_index(index_name):
-    url = "https://localhost:9202/" + index_name
+    url = "http://localhost:9200/" + index_name
     x = requests.delete(url)
     print(x.text)
 
