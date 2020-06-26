@@ -61,15 +61,17 @@ def update_from_ofa(syslog_array):
     for f in res['hits']['hits']:
 
         for syslog_events in syslog_array:
-            if f['_source']['src_ip'] == syslog_events['_source']['srcip']:
-                syslog_events['_source']['ofa_exist'] = True
-                syslog_events['_source']['ofa'] = f['_source']
-                syslog_events['_source']['ofa_attack_direcation'] = 'in'
-            elif f['_source']['src_ip'] == syslog_events['_source']['dstip']:
-                syslog_events['_source']['ofa_exist'] = True
-                syslog_events['_source']['ofa'] = f['_source']
-                syslog_events['_source']['ofa_attack_direcation'] = 'out'
-
+            try:
+                if f['_source']['src_ip'] == syslog_events['_source']['srcip']:
+                    syslog_events['_source']['ofa_exist'] = True
+                    syslog_events['_source']['ofa'] = f['_source']
+                    syslog_events['_source']['ofa_attack_direcation'] = 'in'
+                elif f['_source']['src_ip'] == syslog_events['_source']['dstip']:
+                    syslog_events['_source']['ofa_exist'] = True
+                    syslog_events['_source']['ofa'] = f['_source']
+                    syslog_events['_source']['ofa_attack_direcation'] = 'out'
+            except:
+                pass
     return syslog_array
 
 def update_syslog(syslog_array):
