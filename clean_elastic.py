@@ -7,7 +7,7 @@ max_mb = 15000
 
 
 def clean_not_ofa():
-    url = 'http://localhost:9200/ofa-syslog*/_delete_by_query'
+    url = 'http://18.132.202.215:9200/ofa-syslog*/_delete_by_query'
     myobj = {
                 "query": {
                     "bool": {
@@ -19,7 +19,9 @@ def clean_not_ofa():
                     }
                 }
             }
-    x = requests.post(url, data = myobj, headers = {'Content-type': 'application/json'})
+    y = json.dumps(myobj)
+
+    x = requests.post(url, data = y, headers = {'Content-type': 'application/json'})
     print(x.text)
 
 
@@ -61,4 +63,4 @@ try:
     clean_not_ofa()
 except:
     pass
-rec_clean()
+#rec_clean()
