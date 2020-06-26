@@ -19,7 +19,7 @@ def clean_not_ofa():
                     }
                 }
             }
-    x = requests.post(url, data = myobj)
+    x = requests.post(url, data = myobj, headers = {'Content-type': 'application/json'})
     print(x.text)
 
 
@@ -57,5 +57,8 @@ def rec_clean():
         print("Nothing to clean")
 
 
-clean_not_ofa()
+try:
+    clean_not_ofa()
+except:
+    pass
 rec_clean()
